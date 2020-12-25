@@ -107,6 +107,7 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
 
 function nhapDonHang(sheet, msg) {
     const fromeuser = msg.chat.username;
+    const firstName = msg.chat.last_name + ' ' + msg.chat.first_name;
     const fromIdChat = msg.chat.id;
     if (arrayOrder != []) {
         arrayOrder.forEach(function(item, index, object) {
@@ -118,6 +119,7 @@ function nhapDonHang(sheet, msg) {
     arrayOrder.push({
         type: sheet,
         username: fromeuser,
+        firstName: firstName,
         soluong: '',
         tongtien: '',
         coin: '',
@@ -177,7 +179,7 @@ function nhapDonHang(sheet, msg) {
                                                                         console.log(arrayOrder);
 
                                                                         //nhập khach hang  --------------------------
-                                                                        bot.sendMessage(fromIdChat, 'Nhập khach hàng', {
+                                                                        bot.sendMessage(fromIdChat, 'Nhập khách hàng', {
                                                                                 reply_markup: {
                                                                                     force_reply: true
                                                                                 }
@@ -191,7 +193,7 @@ function nhapDonHang(sheet, msg) {
                                                                                                 item.khachhang = msg.text;
                                                                                                 console.log(arrayOrder);
 
-                                                                                                const urlcall = urlnhapdon + item.type + '&user=@' + item.username + '&soluong=' + item.soluong + '&tongtien=' + item.tongtien + '&coin=' +
+                                                                                                const urlcall = urlnhapdon + item.type + '&user=@' + item.firstName + '&soluong=' + item.soluong + '&tongtien=' + item.tongtien + '&coin=' +
                                                                                                     item.coin + '&khachhang=' + item.khachhang;
 
                                                                                                 const axios = require('axios');
@@ -200,7 +202,7 @@ function nhapDonHang(sheet, msg) {
 
                                                                                                         bot.sendMessage(
                                                                                                             payload.chat.id,
-                                                                                                            `Chúc mừng,đơn hàng đã tạo!\nSố lượng:` + item.soluong +
+                                                                                                            `Chúc mừng, đơn hàng đã tạo!\nSố lượng:` + item.soluong +
                                                                                                             `\nTổng tiền:` + item.tongtien + `\nCoin:` + item.coin + `\nKhách hàng: ` + item.khachhang, {
                                                                                                                 parse_mode: 'HTML',
                                                                                                             }
@@ -275,14 +277,14 @@ bot.onText(/\/start/, (msg) => {
     var options = {
         reply_markup: JSON.stringify({
             inline_keyboard: [
-                [{ text: 'Buy order', callback_data: 'buy_order' }],
-                [{ text: 'Sell order', callback_data: 'sell_order' }]
+                [{ text: 'ĐƠN MUA HÀNG', callback_data: 'buy_order' }],
+                [{ text: 'ĐƠN BÁN HÀNG', callback_data: 'sell_order' }]
             ],
             resize_keyboard: true,
             one_time_keyboard: true,
             force_reply: true,
         })
     };
-
-    bot.sendMessage(msg.chat.id, 'Chọn loại giao dịch:', options);
+    // console.log(msg)
+    bot.sendMessage(msg.chat.id, 'Nhập giao dịch:', options);
 });
