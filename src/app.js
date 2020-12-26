@@ -1,6 +1,7 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const token = '1494741747:AAHyYTkONjsTbgaHzdfXSv17mKIqFqmg42I';
+var change_alias = require("./char.js");
 const bot = new TelegramBot(token, {
     polling: true
 });
@@ -75,20 +76,6 @@ let arrayOrder = [];
 //     }
 // });
 
-function callApi(url, idchat) {
-    const axios = require('axios');
-    axios.get(url)
-        .then(response => {
-            bot.sendMessage(
-                idchat,
-                'Chúc mừng, nhập đơn thành công!'
-            );
-            console.log(response);
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
 
 
 bot.on('callback_query', function onCallbackQuery(callbackQuery) {
@@ -107,7 +94,6 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
 
 function nhapDonHang(sheet, msg) {
     const fromeuser = msg.chat.username;
-    const firstName = msg.chat.last_name + ' ' + msg.chat.first_name;
     const fromIdChat = msg.chat.id;
     if (arrayOrder != []) {
         arrayOrder.forEach(function(item, index, object) {
@@ -119,14 +105,12 @@ function nhapDonHang(sheet, msg) {
     arrayOrder.push({
         type: sheet,
         username: fromeuser,
-        firstName: firstName,
+        rate: '',
         soluong: '',
-        tongtien: '',
-        coin: '',
         khachhang: '',
     })
     console.log(arrayOrder);
-    bot.sendMessage(fromIdChat, 'Nhập số lượng?', {
+    bot.sendMessage(fromIdChat, 'Xin mời nhập tên khách hàng:', {
         reply_markup: {
             force_reply: true
         }
@@ -137,7 +121,7 @@ function nhapDonHang(sheet, msg) {
             if (arrayOrder != []) {
                 arrayOrder.forEach(function(item) {
                     if (item.username === msg.from.username) {
-                        item.soluong = msg.text;
+                        item.khachhang = change_alias(msg.text);
                         console.log(arrayOrder);
 
 
@@ -145,7 +129,7 @@ function nhapDonHang(sheet, msg) {
 
 
                         //nhập tổng tiền  --------------------------
-                        bot.sendMessage(fromIdChat, 'Nhập tổng tiền?', {
+                        bot.sendMessage(fromIdChat, 'Số lượng bao nhiêu?', {
                                 reply_markup: {
                                     force_reply: true
                                 }
@@ -156,7 +140,7 @@ function nhapDonHang(sheet, msg) {
                                     if (arrayOrder != []) {
                                         arrayOrder.forEach(function(item) {
                                             if (item.username === msg.from.username) {
-                                                item.tongtien = msg.text;
+                                                item.soluong = msg.text;
                                                 console.log(arrayOrder);
 
 
@@ -164,7 +148,7 @@ function nhapDonHang(sheet, msg) {
 
 
                                                 //nhập coin  --------------------------
-                                                bot.sendMessage(fromIdChat, 'Nhập loại coin?', {
+                                                bot.sendMessage(fromIdChat, 'Nhập rate hiện tại', {
                                                         reply_markup: {
                                                             force_reply: true
                                                         }
@@ -175,57 +159,29 @@ function nhapDonHang(sheet, msg) {
                                                             if (arrayOrder != []) {
                                                                 arrayOrder.forEach(function(item) {
                                                                     if (item.username === msg.from.username) {
-                                                                        item.coin = msg.text;
+                                                                        item.rate = msg.text;
                                                                         console.log(arrayOrder);
 
-                                                                        //nhập khach hang  --------------------------
-                                                                        bot.sendMessage(fromIdChat, 'Nhập khách hàng', {
-                                                                                reply_markup: {
-                                                                                    force_reply: true
-                                                                                }
-                                                                            }).then(payload => {
-                                                                                const replyListenerId = bot.onReplyToMessage(payload.chat.id, payload.message_id, msg => {
-                                                                                    bot.removeReplyListener(replyListenerId)
-                                                                                        // console.log(msg) // here's the reply which is I think what you want
-                                                                                    if (arrayOrder != []) {
-                                                                                        arrayOrder.forEach(function(item) {
-                                                                                            if (item.username === msg.from.username) {
-                                                                                                item.khachhang = msg.text;
-                                                                                                console.log(arrayOrder);
 
-                                                                                                const urlcall = urlnhapdon + item.type + '&user=@' + item.username + '&soluong=' + item.soluong + '&tongtien=' + item.tongtien + '&coin=' + item.coin + '&khachhang=' + item.khachhang;
-												console.log(urlcall);
-                                                                                                const axios = require('axios');
-                                                                                                axios.get(urlcall)
-                                                                                                    .then(response => {
 
-                                                                                                        bot.sendMessage(
-                                                                                                            payload.chat.id,
-                                                                                                            `Chúc mừng, đơn hàng đã tạo!\nSố lượng:` + item.soluong +
-                                                                                                            `\nTổng tiền:` + item.tongtien + `\nCoin:` + item.coin + `\nKhách hàng: ` + item.khachhang, {
-                                                                                                                parse_mode: 'HTML',
-                                                                                                            }
-                                                                                                        );
-                                                                                                        // console.log(response);
-                                                                                                    })
-                                                                                                    .catch(error => {
-                                                                                                        console.log(error);
-                                                                                                    });
+                                                                        const urlcall = urlnhapdon + item.type + '&user=@' + item.username + '&soluong=' + item.soluong + '&rate=' + item.rate + '&khachhang=' + item.khachhang;
+                                                                        console.log(urlcall);
+                                                                        const axios = require('axios');
+                                                                        axios.get(urlcall)
+                                                                            .then(response => {
 
-                                                                                            } else {
-                                                                                                console.log('có vẫn đề ở nhập khach hang');
-                                                                                            }
-                                                                                        });
-                                                                                    } else {
-                                                                                        console.log('có vẫn đề ở if (arrayOrder != []) trong phần nhập khach hàng');
+                                                                                bot.sendMessage(
+                                                                                    payload.chat.id,
+                                                                                    `Lên đơn thành công!\nMã đơn:` + response.data.result + `\nSố lượng:` + item.soluong +
+                                                                                    `\nRate:` + item.rate + `\nKhách hàng: ` + item.khachhang + `\nCám ơn quý khách!`, {
+                                                                                        parse_mode: 'HTML',
                                                                                     }
-                                                                                })
+                                                                                );
+                                                                                console.log(response.data.result);
                                                                             })
-                                                                            //kết thúc nhập khách hàng -----------------------
-
-
-
-
+                                                                            .catch(error => {
+                                                                                console.log(error);
+                                                                            });
                                                                     } else {
                                                                         console.log('có vẫn đề ở nhập coin');
                                                                     }
@@ -236,12 +192,6 @@ function nhapDonHang(sheet, msg) {
                                                         })
                                                     })
                                                     //kết thúc nhập coin -----------------------
-
-
-
-
-
-
 
                                             } else {
                                                 console.log('có vẫn đề ở nhập tổng tiền');
