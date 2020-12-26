@@ -193,9 +193,8 @@ function nhapDonHang(sheet, msg) {
                                                                                                 item.khachhang = msg.text;
                                                                                                 console.log(arrayOrder);
 
-                                                                                                const urlcall = urlnhapdon + item.type + '&user=@' + item.username + '&soluong=' + item.soluong + '&tongtien=' + item.tongtien + '&coin=' +
-                                                                                                    item.coin + '&khachhang=' + item.khachhang;
-
+                                                                                                const urlcall = urlnhapdon + item.type + '&user=@' + item.username + '&soluong=' + item.soluong + '&tongtien=' + item.tongtien + '&coin=' + item.coin + '&khachhang=' + item.khachhang;
+												console.log(urlcall);
                                                                                                 const axios = require('axios');
                                                                                                 axios.get(urlcall)
                                                                                                     .then(response => {
