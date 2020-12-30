@@ -1,6 +1,8 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const token = '1423009565:AAGfe6iyl-8HbjIACMZSa_DMfFH051TWt5A';
+chính
+//const token = '1423009565:AAGfe6iyl-8HbjIACMZSa_DMfFH051TWt5A'; 
 var change_alias = require("./char.js");
 const bot = new TelegramBot(token, {
     polling: true
@@ -90,7 +92,48 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
         // text = 'Hãy nhập theo cú pháp: B_SốLượng_TổngTiền_Coin_KháchHàng  (vd: B 106500 24800000 USDT Hoang)';
     }
 
+    if (action === 'delete_order') {
+        xoadonhang(msg);
+        // text = 'Hãy nhập theo cú pháp: B_SốLượng_TổngTiền_Coin_KháchHàng  (vd: B 106500 24800000 USDT Hoang)';
+    }
+
+
 });
+
+function xoadonhang(msg) {
+    const fromeuser = msg.chat.username;
+    const fromIdChat = msg.chat.id;
+    bot.sendMessage(fromIdChat, 'Nhập mã đơn hàng cần xóa (lưu ý xóa vĩnh viễn)', {
+        reply_markup: {
+            force_reply: true
+        }
+    }).then(payload => {
+        const replyListenerId = bot.onReplyToMessage(payload.chat.id, payload.message_id, msg => {
+            bot.removeReplyListener(replyListenerId)
+                // console.log(msg) // here's the reply which is I think what you want
+
+            const urlcall = urlnhapdon + 'xoadonhang&code=' + msg.text;
+            console.log(urlcall);
+            const axios = require('axios');
+            axios.get(urlcall)
+                .then(response => {
+
+                    bot.sendMessage(
+                        payload.chat.id,
+                        response.data.result,
+                    );
+
+                    console.log(response.data.result);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+
+        })
+    })
+}
+
 
 function nhapDonHang(sheet, msg) {
     const fromeuser = msg.chat.username;
@@ -227,7 +270,8 @@ bot.onText(/\/start/, (msg) => {
         reply_markup: JSON.stringify({
             inline_keyboard: [
                 [{ text: 'ĐƠN MUA HÀNG', callback_data: 'buy_order' }],
-                [{ text: 'ĐƠN BÁN HÀNG', callback_data: 'sell_order' }]
+                [{ text: 'ĐƠN BÁN HÀNG', callback_data: 'sell_order' }],
+                [{ text: 'XÓA ĐƠN HÀNG', callback_data: 'delete_order' }]
             ],
             resize_keyboard: true,
             one_time_keyboard: true,
