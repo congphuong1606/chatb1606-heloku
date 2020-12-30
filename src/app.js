@@ -1,8 +1,7 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
-const token = '1423009565:AAGfe6iyl-8HbjIACMZSa_DMfFH051TWt5A';
-chính
-//const token = '1423009565:AAGfe6iyl-8HbjIACMZSa_DMfFH051TWt5A'; 
+const token = '1423009565:AAGfe6iyl-8HbjIACMZSa_DMfFH051TWt5A'; //chinh
+//const token = '1423009565:AAGfe6iyl-8HbjIACMZSa_DMfFH051TWt5A'; //phu
 var change_alias = require("./char.js");
 const bot = new TelegramBot(token, {
     polling: true
