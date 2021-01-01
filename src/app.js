@@ -7,7 +7,6 @@ const bot = new TelegramBot(token, {
     polling: true
 });
 let urlnhapdon = 'https://script.google.com/macros/s/AKfycbzIBJoQAODEDLE88621EoE5jFzGRKVRBbDseXR9FKUgLu-5CROXZVQk/exec?action=';
-
 let arrayOrder = [];
 
 // bot.on('message', (msg) => {
@@ -183,9 +182,29 @@ function editdonhang(msg) {
                                                                         axios.get(urlcall)
                                                                             .then(response => {
                                                                                 if (response.data.result != 'Mã đơn hàng không tồn tại!') {
+
+                                                                                    const idsheet = (item.code).charAt(0);
+                                                                                    var typeee = '';
+                                                                                    if (idsheet === 'B' || idsheet === 'b') { //Buy
+                                                                                        // @ts-ignore
+                                                                                        typeee = 'MUA'
+                                                                                    }
+                                                                                    if (idsheet === 'S' || idsheet === 's') { //sell
+                                                                                        // @ts-ignore
+                                                                                        typeee = 'BÁN'
+                                                                                    }
+
                                                                                     bot.sendMessage(
                                                                                         payload.chat.id,
-                                                                                        `Cập nhật thành công!\nMã đơn:` + item.code + `\nSố lượng:` + item.soluong +
+                                                                                        `Cập nhật thành công!\n` + typeee + ` USDT: @` + item.username + `\nMã đơn:` + item.code + `\nSố lượng:` + item.soluong +
+                                                                                        `\nRate:` + item.rate + `\nKhách hàng: ` + response.data.result + `\nCám ơn quý khách!`, {
+                                                                                            parse_mode: 'HTML',
+                                                                                        }
+                                                                                    );
+                                                                                    const idgroup = -316335081;
+                                                                                    bot.sendMessage(
+                                                                                        idgroup,
+                                                                                        `Cập nhật thành công!\n` + typeee + ` USDT: @` + item.username + `\nMã đơn:` + item.code + `\nSố lượng:` + item.soluong +
                                                                                         `\nRate:` + item.rate + `\nKhách hàng: ` + response.data.result + `\nCám ơn quý khách!`, {
                                                                                             parse_mode: 'HTML',
                                                                                         }
@@ -363,9 +382,26 @@ function nhapDonHang(sheet, msg) {
                                                                         axios.get(urlcall)
                                                                             .then(response => {
 
+                                                                                var typeee = '';
+                                                                                if (item.type === 'nhapmuahang') { //Buy
+                                                                                    // @ts-ignore
+                                                                                    typeee = 'MUA'
+                                                                                }
+                                                                                if (item.type === 'nhapbanhang') { //sell
+                                                                                    // @ts-ignore
+                                                                                    typeee = 'BÁN'
+                                                                                }
                                                                                 bot.sendMessage(
                                                                                     payload.chat.id,
-                                                                                    `Lên đơn thành công!\nMã đơn:` + response.data.result + `\nSố lượng:` + item.soluong +
+                                                                                    `Lên đơn thành công!\n` + typeee + ` USDT: @` + item.username + `\nMã đơn:` + response.data.result + `\nSố lượng:` + item.soluong +
+                                                                                    `\nRate:` + item.rate + `\nKhách hàng: ` + item.khachhang + `\nCám ơn quý khách!`, {
+                                                                                        parse_mode: 'HTML',
+                                                                                    }
+                                                                                );
+                                                                                const idgroup = -316335081;
+                                                                                bot.sendMessage(
+                                                                                    idgroup,
+                                                                                    `Lên đơn thành công!\n` + typeee + ` USDT: @` + item.username + `\nMã đơn:` + response.data.result + `\nSố lượng:` + item.soluong +
                                                                                     `\nRate:` + item.rate + `\nKhách hàng: ` + item.khachhang + `\nCám ơn quý khách!`, {
                                                                                         parse_mode: 'HTML',
                                                                                     }
@@ -431,4 +467,10 @@ bot.onText(/\/start/, (msg) => {
     };
     // console.log(msg)
     bot.sendMessage(msg.chat.id, 'Nhập giao dịch:', options);
+});
+
+
+bot.onText(/\/getid/, (msg) => {
+    bot.sendMessage(msg.chat.id, 'Bạn đã lấy xong id!');
+    console.log(msg)
 });
