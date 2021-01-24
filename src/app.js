@@ -197,15 +197,16 @@ function editdonhang(msg) {
                                                                                     bot.sendMessage(
                                                                                         payload.chat.id,
                                                                                         `Cập nhật thành công!\n` + typeee + ` USDT: @` + item.username + `\nMã đơn:` + item.code + `\nSố lượng:` + item.soluong +
-                                                                                        `\nRate:` + item.rate + `\nKhách hàng: ` + response.data.result + `\nCám ơn quý khách!`, {
+                                                                                        `\nRate:` + item.rate + `\nTổng tiền: ` + (item.soluong * item.rate) + `\nKhách hàng: ` + response.data.result, {
                                                                                             parse_mode: 'HTML',
                                                                                         }
+
                                                                                     );
                                                                                     const idgroup = -316335081;
                                                                                     bot.sendMessage(
                                                                                         idgroup,
                                                                                         `Cập nhật thành công!\n` + typeee + ` USDT: @` + item.username + `\nMã đơn:` + item.code + `\nSố lượng:` + item.soluong +
-                                                                                        `\nRate:` + item.rate + `\nKhách hàng: ` + response.data.result + `\nCám ơn quý khách!`, {
+                                                                                        `\nRate:` + item.rate + `\nTổng tiền: ` + (item.soluong * item.rate) + `\nKhách hàng: ` + response.data.result, {
                                                                                             parse_mode: 'HTML',
                                                                                         }
                                                                                     );
@@ -394,7 +395,7 @@ function nhapDonHang(sheet, msg) {
                                                                                 bot.sendMessage(
                                                                                     payload.chat.id,
                                                                                     `Lên đơn thành công!\n` + typeee + ` USDT: @` + item.username + `\nMã đơn:` + response.data.result + `\nSố lượng:` + item.soluong +
-                                                                                    `\nRate:` + item.rate + `\nKhách hàng: ` + item.khachhang + `\nCám ơn quý khách!`, {
+                                                                                    `\nRate:` + item.rate + `\nTổng tiền: ` + (item.soluong * item.rate) + `\nKhách hàng: ` + item.khachhang, {
                                                                                         parse_mode: 'HTML',
                                                                                     }
                                                                                 );
@@ -402,7 +403,7 @@ function nhapDonHang(sheet, msg) {
                                                                                 bot.sendMessage(
                                                                                     idgroup,
                                                                                     `Lên đơn thành công!\n` + typeee + ` USDT: @` + item.username + `\nMã đơn:` + response.data.result + `\nSố lượng:` + item.soluong +
-                                                                                    `\nRate:` + item.rate + `\nKhách hàng: ` + item.khachhang + `\nCám ơn quý khách!`, {
+                                                                                    `\nRate:` + item.rate + `\nTổng tiền: ` + (item.soluong * item.rate) + `\nKhách hàng: ` + item.khachhang, {
                                                                                         parse_mode: 'HTML',
                                                                                     }
                                                                                 );
