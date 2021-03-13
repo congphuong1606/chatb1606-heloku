@@ -475,3 +475,46 @@ bot.onText(/\/getid/, (msg) => {
     bot.sendMessage(msg.chat.id, 'Bạn đã lấy xong id!');
     console.log(msg)
 });
+
+
+bot.onText(/\/vnd/, (msg) => {
+
+
+
+
+    const urlcall = urlnhapdon +  'getbank';
+    console.log(urlcall);
+    const axios = require('axios');
+    axios.get(urlcall)
+        .then(response => {
+            bot.sendMessage(
+                msg.chat.id,
+                `Tk Ngân Hàng:\n` + `ACB Chính: ` + response.data.result1.toLocaleString() + ` đ\nTCB Hải:     ` + response.data.result2.toLocaleString() + ` đ\nACB Hải:     ` + response.data.result3.toLocaleString() +
+                ` đ\nACB Quý:    ` + response.data.result4.toLocaleString() + ` đ\nTCB Quý:    ` + response.data.result5.toLocaleString() +` đ\nTổng:           ` + (response.data.result1 +response.data.result2 +response.data.result3 +response.data.result4+response.data.result5).toLocaleString() +` đ`, {
+                    parse_mode: 'HTML',
+                }
+            );
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
+
+
+bot.onText(/\/coin/, (msg) => {
+    const urlcall = urlnhapdon +  'getcoin';
+    console.log(urlcall);
+    const axios = require('axios');
+    axios.get(urlcall)
+        .then(response => {
+            bot.sendMessage(
+                msg.chat.id,
+                `Tài khoản - Số lượng:\n` + `Sàn BNB: ` + response.data.result1.toLocaleString() + `\nVí trust:    ` + response.data.result2.toLocaleString() +`\nTổng:        ` + response.data.result3.toLocaleString(), {
+                    parse_mode: 'HTML',
+                }
+            );
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
