@@ -1,12 +1,12 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
-const token = '1423009565:AAGfe6iyl-8HbjIACMZSa_DMfFH051TWt5A'; //chinh
+const token = '1775084609:AAFSfm3V3Hef0Qm0LwhqTJvmHpOQu7vPAVM'; //chinh
 //const token = '1494741747:AAHyYTkONjsTbgaHzdfXSv17mKIqFqmg42I'; //phu
 var change_alias = require("./char.js");
 const bot = new TelegramBot(token, {
     polling: true
 });
-let urlnhapdon = 'https://script.google.com/macros/s/AKfycbzIBJoQAODEDLE88621EoE5jFzGRKVRBbDseXR9FKUgLu-5CROXZVQk/exec?action=';
+let urlnhapdon = 'https://script.google.com/macros/s/AKfycbyNmHBbB2EHGl9vg1oGfgX7QmsbNu70NEB7lAUKo25w9YgH52QyCEIubMSxi6l0L4To/exec?action=';
 let arrayOrder = [];
 
 // bot.on('message', (msg) => {
@@ -487,10 +487,13 @@ bot.onText(/\/vnd/, (msg) => {
     const axios = require('axios');
     axios.get(urlcall)
         .then(response => {
+            let str=`\n`;
+            response.data.forEach(element =>str = str+ element+`\n`);
+            console.log(str);
+            
             bot.sendMessage(
                 msg.chat.id,
-                `Tk Ngân Hàng:\n` + `ACB Chính: ` + response.data.result1.toLocaleString() + ` đ\nTCB Hải:     ` + response.data.result2.toLocaleString() + ` đ\nACB Hải:     ` + response.data.result3.toLocaleString() +
-                ` đ\nACB Quý:    ` + response.data.result4.toLocaleString() + ` đ\nTCB Quý:    ` + response.data.result5.toLocaleString() +` đ\nTổng:           ` + (response.data.result1 +response.data.result2 +response.data.result3 +response.data.result4+response.data.result5).toLocaleString() +` đ`, {
+                `Tk Ngân Hàng:` +  str, {
                     parse_mode: 'HTML',
                 }
             );
